@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>{m.contact_title()} - Mundiagua Balear</title>
+	<title>{m.contact_title()} - Mundiagua</title>
 	<meta name="description" content={m.contact_heading()} />
 </svelte:head>
 

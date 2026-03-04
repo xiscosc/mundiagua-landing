@@ -14,15 +14,12 @@
 </script>
 
 <svelte:head>
-	<title>Mundiagua Balear</title>
+	<title>Mundiagua</title>
 	<meta name="description" content={m.hero_subtitle()} />
 </svelte:head>
 
 <HeroSection minHeightClass="min-h-[42rem]" contentPaddingClass="pb-24 pt-40 md:pb-28 md:pt-48">
 	<div class="max-w-3xl">
-		<p class="inline-flex items-center rounded-full border border-white/35 bg-white/12 px-4 py-1.5 text-xs font-semibold tracking-[0.16em] text-white/95 uppercase">
-			Mundiagua Balear
-		</p>
 		<h1 class="mt-5 text-4xl leading-tight font-bold text-white md:text-6xl">
 			{m.hero_title()}
 		</h1>
