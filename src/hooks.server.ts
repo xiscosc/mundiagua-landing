@@ -1,6 +1,5 @@
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
-import { paraglideMiddleware } from "$lib/paraglide/server";
 import {
 	baseLocale,
 	cookieName,
@@ -8,6 +7,7 @@ import {
 	isLocale,
 	localizeUrl,
 } from "$lib/paraglide/runtime";
+import { paraglideMiddleware } from "$lib/paraglide/server";
 
 const browserLanguageHandle: Handle = async ({ event, resolve }) => {
 	if (event.request.method !== "GET" && event.request.method !== "HEAD") {
@@ -50,8 +50,7 @@ const browserLanguageHandle: Handle = async ({ event, resolve }) => {
 
 const paraglideHandle: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request: localizedRequest, locale }) => {
-		event.request = localizedRequest;
-		return resolve(event, {
+		return resolve({ ...event, request: localizedRequest }, {
 			transformPageChunk: ({ html }) => html.replace("%lang%", locale),
 		});
 	});
