@@ -1,11 +1,69 @@
 <script lang="ts">
+	import { page } from "$app/state";
 	import HeroSection from "$lib/components/HeroSection.svelte";
 	import * as m from "$lib/paraglide/messages.js";
+	import { getLocale, localizeHref } from "$lib/paraglide/runtime.js";
+
+	const ogLocaleMap = {
+		es: "es_ES",
+		en: "en_GB",
+		de: "de_DE",
+	} as const;
+
+	const canonicalUrl = $derived(new URL(localizeHref("/contact"), page.url.origin).toString());
+	const alternateEsUrl = $derived(new URL(localizeHref("/contact", { locale: "es" }), page.url.origin).toString());
+	const alternateEnUrl = $derived(new URL(localizeHref("/contact", { locale: "en" }), page.url.origin).toString());
+	const alternateDeUrl = $derived(new URL(localizeHref("/contact", { locale: "de" }), page.url.origin).toString());
+	const ogLocale = $derived(ogLocaleMap[getLocale()]);
+	const contactSchema = $derived.by(() =>
+		JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "ContactPage",
+			name: m.seo_contact_title(),
+			url: canonicalUrl,
+			description: m.seo_contact_description(),
+			inLanguage: getLocale(),
+			mainEntity: {
+				"@type": "LocalBusiness",
+				name: "Mundiagua",
+				telephone: "+34 971 795 177",
+				email: "consultas@mundiaguabalear.com",
+				areaServed: "Mallorca",
+				brand: [
+					{ "@type": "Brand", name: "IDEGIS" },
+					{ "@type": "Brand", name: "FLUIDRA" },
+					{ "@type": "Brand", name: "ZODIAC" },
+					{ "@type": "Brand", name: "ZODIAC (FLUIDRA)" },
+					{ "@type": "Brand", name: "BWT" },
+					{ "@type": "Brand", name: "ATH" },
+					{ "@type": "Brand", name: "ATH (BWT)" },
+				],
+			},
+		}),
+	);
 </script>
 
 <svelte:head>
-	<title>{m.contact_title()} - Mundiagua</title>
-	<meta name="description" content={m.contact_heading()} />
+	<title>{m.seo_contact_title()}</title>
+	<meta name="description" content={m.seo_contact_description()} />
+	<meta name="keywords" content={m.seo_contact_keywords()} />
+	<link rel="canonical" href={canonicalUrl} />
+	<link rel="alternate" hreflang="es" href={alternateEsUrl} />
+	<link rel="alternate" hreflang="en" href={alternateEnUrl} />
+	<link rel="alternate" hreflang="de" href={alternateDeUrl} />
+	<link rel="alternate" hreflang="x-default" href={alternateEsUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Mundiagua" />
+	<meta property="og:locale" content={ogLocale} />
+	<meta property="og:title" content={m.seo_contact_title()} />
+	<meta property="og:description" content={m.seo_contact_description()} />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content={m.seo_contact_title()} />
+	<meta name="twitter:description" content={m.seo_contact_description()} />
+	<script type="application/ld+json">
+		{@html contactSchema}
+	</script>
 </svelte:head>
 
 <HeroSection minHeightClass="min-h-[32rem]" contentPaddingClass="pb-20 pt-36 md:pt-44">

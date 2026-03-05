@@ -1,21 +1,81 @@
 <script lang="ts">
+	import { page } from "$app/state";
 	import ath from "$lib/assets/ath.avif";
 	import idegis from "$lib/assets/idegis.avif";
 	import zodiac from "$lib/assets/zodiac.avif";
 	import HeroSection from "$lib/components/HeroSection.svelte";
 	import * as m from "$lib/paraglide/messages.js";
-	import { localizeHref } from "$lib/paraglide/runtime.js";
+	import { getLocale, localizeHref } from "$lib/paraglide/runtime.js";
 
 	const testimonials = [
 		{ text: () => m.testimonials_item0_text(), author: () => m.testimonials_item0_author() },
 		{ text: () => m.testimonials_item1_text(), author: () => m.testimonials_item1_author() },
 		{ text: () => m.testimonials_item2_text(), author: () => m.testimonials_item2_author() },
 	];
+
+	const ogLocaleMap = {
+		es: "es_ES",
+		en: "en_GB",
+		de: "de_DE",
+	} as const;
+
+	const canonicalUrl = $derived(new URL(localizeHref("/"), page.url.origin).toString());
+	const alternateEsUrl = $derived(new URL(localizeHref("/", { locale: "es" }), page.url.origin).toString());
+	const alternateEnUrl = $derived(new URL(localizeHref("/", { locale: "en" }), page.url.origin).toString());
+	const alternateDeUrl = $derived(new URL(localizeHref("/", { locale: "de" }), page.url.origin).toString());
+	const ogLocale = $derived(ogLocaleMap[getLocale()]);
+	const homeSchema = $derived.by(() =>
+		JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "LocalBusiness",
+			name: "Mundiagua",
+			url: canonicalUrl,
+			description: m.seo_home_description(),
+			telephone: "+34 971 795 177",
+			email: "consultas@mundiaguabalear.com",
+			areaServed: "Mallorca",
+			address: {
+				"@type": "PostalAddress",
+				streetAddress: "Carrer de General Weyler, 58",
+				addressLocality: "Marratxi",
+				addressRegion: "Illes Balears",
+				postalCode: "07141",
+				addressCountry: "ES",
+			},
+			brand: [
+				{ "@type": "Brand", name: "IDEGIS" },
+				{ "@type": "Brand", name: "FLUIDRA" },
+				{ "@type": "Brand", name: "ZODIAC" },
+				{ "@type": "Brand", name: "ZODIAC (FLUIDRA)" },
+				{ "@type": "Brand", name: "BWT" },
+				{ "@type": "Brand", name: "ATH" },
+				{ "@type": "Brand", name: "ATH (BWT)" },
+			],
+		}),
+	);
 </script>
 
 <svelte:head>
-	<title>Mundiagua</title>
-	<meta name="description" content={m.hero_subtitle()} />
+	<title>{m.seo_home_title()}</title>
+	<meta name="description" content={m.seo_home_description()} />
+	<meta name="keywords" content={m.seo_home_keywords()} />
+	<link rel="canonical" href={canonicalUrl} />
+	<link rel="alternate" hreflang="es" href={alternateEsUrl} />
+	<link rel="alternate" hreflang="en" href={alternateEnUrl} />
+	<link rel="alternate" hreflang="de" href={alternateDeUrl} />
+	<link rel="alternate" hreflang="x-default" href={alternateEsUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Mundiagua" />
+	<meta property="og:locale" content={ogLocale} />
+	<meta property="og:title" content={m.seo_home_title()} />
+	<meta property="og:description" content={m.seo_home_description()} />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content={m.seo_home_title()} />
+	<meta name="twitter:description" content={m.seo_home_description()} />
+	<script type="application/ld+json">
+		{@html homeSchema}
+	</script>
 </svelte:head>
 
 <HeroSection minHeightClass="min-h-[42rem]" contentPaddingClass="pb-24 pt-40 md:pb-28 md:pt-48">
@@ -75,16 +135,17 @@
 		<div class="mb-8 max-w-3xl">
 			<p class="text-xs font-semibold tracking-[0.14em] text-sky-700 uppercase">{m.brands_label()}</p>
 			<h2 class="mt-3 text-2xl font-bold text-slate-900 md:text-4xl">{m.brands_title()}</h2>
+			<p class="mt-3 text-sm text-slate-600">{m.seo_brands_support_line()}</p>
 		</div>
 		<div class="grid gap-5 md:grid-cols-3">
 			<div class="flex min-h-52 items-center justify-center overflow-hidden rounded-3xl border border-slate-200/70 bg-white/90 p-6 shadow-[0_28px_70px_-45px_rgba(10,37,64,0.58)] backdrop-blur-[6px]">
 				<img src={idegis} alt="IDEGIS" class="h-28 w-full object-contain [transform:scale(2.8)]" />
 			</div>
 			<div class="flex min-h-52 items-center justify-center overflow-hidden rounded-3xl border border-slate-200/70 bg-white/90 p-6 shadow-[0_28px_70px_-45px_rgba(10,37,64,0.58)] backdrop-blur-[6px]">
-				<img src={zodiac} alt="ZODIAC" class="h-28 w-full object-contain [transform:scale(2.1)]" />
+				<img src={zodiac} alt="ZODIAC (FLUIDRA)" class="h-28 w-full object-contain [transform:scale(2.1)]" />
 			</div>
 			<div class="flex min-h-52 items-center justify-center overflow-hidden rounded-3xl border border-slate-200/70 bg-white/90 p-6 shadow-[0_28px_70px_-45px_rgba(10,37,64,0.58)] backdrop-blur-[6px]">
-				<img src={ath} alt="ATH" class="h-28 w-full object-contain [transform:scale(2.1)]" />
+				<img src={ath} alt="ATH (BWT)" class="h-28 w-full object-contain [transform:scale(2.1)]" />
 			</div>
 		</div>
 	</div>
