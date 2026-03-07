@@ -73,9 +73,7 @@
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content={m.seo_home_title()} />
 	<meta name="twitter:description" content={m.seo_home_description()} />
-	<script type="application/ld+json">
-		{@html homeSchema}
-	</script>
+	{@html `<script type="application/ld+json">${homeSchema}</script>`}
 </svelte:head>
 
 <HeroSection minHeightClass="min-h-[42rem]" contentPaddingClass="pb-24 pt-40 md:pb-28 md:pt-48">
