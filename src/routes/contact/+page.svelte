@@ -61,9 +61,7 @@
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content={m.seo_contact_title()} />
 	<meta name="twitter:description" content={m.seo_contact_description()} />
-	<script type="application/ld+json">
-		{@html contactSchema}
-	</script>
+	{@html `<script type="application/ld+json">${contactSchema}</script>`}
 </svelte:head>
 
 <HeroSection minHeightClass="min-h-[32rem]" contentPaddingClass="pb-20 pt-36 md:pt-44">
